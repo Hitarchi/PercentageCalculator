@@ -1,0 +1,124 @@
+﻿@{
+    ViewData["Title"] = "Marks Distribution";
+}
+
+<style>
+    .btn{
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-right: 10px;
+        display:flex;
+        justify-content: flex-end;
+    
+    }
+
+        .btn:hover {
+            background-color: #0056b3;
+            color:white;
+        }
+
+
+    h1 {
+        text-align: center;
+        margin: 10px;
+        padding: 10px;
+    }
+
+    .MainMP{
+    
+    display:flex;
+    justify-content:space-between;
+    
+    }
+
+
+    #percentageTextBox{
+    width:50px;
+    
+    }
+
+    .MP {
+    display:flex;
+    justify-content:left;
+    align-items:left;
+
+    }
+
+</style>
+<h1>Marks Distribution</h1>
+
+<canvas id="myChart" style="width: auto; height: auto"></canvas>
+
+<div class="MainMP" >
+<div class="MP">
+<button class="btn" onclick="calculatePercentage()">Get Percentage</button>
+<input type="text" id="percentageTextBox" readonly />
+    </div>
+
+<div style="display: flex; justify-content: flex-end; align-items: center;">
+    <button type="button" class="btn btn-primary" id="goBackBtn">Go Back</button>
+</div>
+</div>
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+       
+        var data = JSON.parse(sessionStorage.getItem('latestData'));
+
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Maths', 'Physics', 'Chemistry', 'Hindi', 'English'],
+                datasets: [{
+                    label: 'Student Data',
+                    data: [data.maths, data.physics, data.chemistry, data.hindi, data.english],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                
+            }
+        });
+    
+            function calculatePercentage() {
+                fetch('/api/PercentageCalculation')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                      
+                    document.getElementById('percentageTextBox').value = data.percentage + '%';
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while calculating percentage.');
+                    });
+            }
+        document.getElementById('goBackBtn').addEventListener('click', function () {
+
+            window.location.href = "/Student";
+        });
+    </script>
+}

@@ -1,0 +1,189 @@
+﻿@model StudentMarks.Models.StudentModel
+
+@{
+    ViewData["Title"] = "Student Marks";
+}
+
+<style>
+   
+    #studentForm {
+        margin: 0 auto;
+        width: 50%; 
+    }
+    h2{
+    text-align:center;
+    margin:2px;
+    padding:15px;
+    }
+  
+    label {
+        font-weight: bold;
+        display: block;
+        width:90px;
+        margin-bottom: 5px;
+    }
+
+    .form-group {
+        display:flex;
+        margin-bottom: 15px;
+    }
+
+    .form-control {
+        width: 60%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        font-size: 14px; 
+    }
+
+    .btn-group {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .form-group1{
+         display:flex;
+            justify-content:center;
+            align-items:center;
+    }
+
+    .btn {
+  
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-right: 10px;
+    }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+</style>
+
+<h2>Enter Student Marks</h2>
+
+<form id="studentForm"> 
+    <div class="form-group">
+        <label asp-for="name">Name :</label>
+        <input asp-for="name" class="form-control" />
+        <span asp-validation-for="name" class="text-danger"></span>
+    </div>
+    <br />
+    <div class="form-group">
+        <label asp-for="maths">Maths :</label>
+        <input asp-for="maths" class="form-control" />
+        <span asp-validation-for="maths" class="text-danger"></span>
+    </div>
+    <br />
+    <div class="form-group">
+        <label asp-for="physics">Physics :</label>
+        <input asp-for="physics" class="form-control" />
+        <span asp-validation-for="physics" class="text-danger"></span>
+    </div>
+    <br />
+    <div class="form-group">
+        <label asp-for="chemistry">Chemistry :</label>
+        <input asp-for="chemistry" class="form-control" />
+        <span asp-validation-for="chemistry" class="text-danger"></span>
+    </div>
+    <br />
+    <div class="form-group">
+        <label asp-for="hindi">Hindi : </label>
+        <input asp-for="hindi" class="form-control" />
+        <span asp-validation-for="hindi" class="text-danger"></span>
+    </div>
+    <br />
+    <div class="form-group">
+        <label asp-for="english">English :</label>
+        <input asp-for="english" class="form-control" />
+        <span asp-validation-for="english" class="text-danger"></span>
+    </div>
+    <br />
+    <div class="form-group">
+        <label asp-for="id">ID :</label>
+        <input asp-for="id" class="form-control" />
+        <span asp-validation-for="id" class="text-danger"></span>
+    </div>
+    <br />
+    <div class="form-group1">
+    <button type="submit" class="btn btn-primary" id="saveButton">Save</button>
+    <button type="submit" class="btn btn-primary" id="nextPageBtn">Next Page</button>
+    </div>
+</form>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#saveButton').click(function (event) {
+                event.preventDefault();
+                debugger;
+               
+                var studentData = {
+                    name: $('input[name="name"]').val(),
+                    maths: $('input[name="maths"]').val(),
+                    physics: $('input[name="physics"]').val(),
+                    chemistry: $('input[name="chemistry"]').val(),
+                    hindi: $('input[name="hindi"]').val(),
+                    english: $('input[name="english"]').val(),
+                    id: $('input[name="id"]').val()
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Student/Save",
+                    data: JSON.stringify(studentData),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        alert('Data saved successfully!');
+                    },
+                    error: function (error) {
+                        alert('Error saving data.');
+                    }
+                });
+            });
+
+            $('#nextPageBtn').click(function (event) {
+                event.preventDefault();
+                debugger;
+              
+                var studentData = {
+                    name: $('input[name="name"]').val(),
+                    maths: $('input[name="maths"]').val(),
+                    physics: $('input[name="physics"]').val(),
+                    chemistry: $('input[name="chemistry"]').val(),
+                    hindi: $('input[name="hindi"]').val(),
+                    english: $('input[name="english"]').val(),
+                    id: $('input[name="id"]').val()
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Student/GetLatestData",
+                    data: JSON.stringify(studentData),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        sessionStorage.setItem('latestData', JSON.stringify(response));
+                      
+                        window.location.href = "/Student/MarksDistribution";
+                    },
+                    error: function (error) {
+                        console.log(error);
+                        alert('Error saving data.');
+                    }
+                });
+
+            });
+
+        });
+    </script>
+}
+

@@ -1,0 +1,12 @@
+﻿/*#marksChart {
+    width: 100px;
+    height: 100px;
+    margin: auto;
+    display:block ;
+}*/
+#myChart {
+    width: 100%;
+    height: 100%;
+    margin: auto;
+    display: block;
+}
